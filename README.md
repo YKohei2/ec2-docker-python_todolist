@@ -63,3 +63,25 @@ Line 21:
   Line 2:
      .sqlite3のファイルはコピーしないように。
      **：.sqlite3とついているすべてのファイルが対象
+
+* Docker Compose 
+
+Line 1: 
+   docker composeのバージョン指定
+
+Line 3~12:
+   testとreleaseのサービスのコンテナのビルド
+context: .   current directly をdockerの作業対象にしている。   
+dockerfile: ビルドするfileを指定。
+
+Line 23~27: 
+   docker runでオプションをつけていたものをここに記載する。
+
+* Docker-compose DB
+
+Line 35~38:
+   Databaseに接続するdatabase名、username, パスワード
+   setting_release.pyにアプリがデータベースに接続するように設定している。
+
+     
+
