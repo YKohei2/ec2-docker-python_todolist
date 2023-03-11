@@ -74,14 +74,50 @@ Line 3~12:
 context: .   current directly をdockerの作業対象にしている。   
 dockerfile: ビルドするfileを指定。
 
-Line 23~27: 
-   docker runでオプションをつけていたものをここに記載する。
+
+depends on:  ここのdbが問題なかったら上記リリースサービスのコンテナのビルドが発動する。
+     service healthyの判断は下記30~33行目のhealthcheckで判断する。
+
+release:
+  build: ここでreleaseコンテナ基本の設定をして下記extendsのappとmigrateで用途に分けて細かくコマンドで指示するイメージ。 
+  environment: 
+       Django setting module:  がdbに接続するための環境変数の記載
+      
+
+extends: 
+   file:  別のdocker-compose.ymlファイルから呼んでくることもできる。
+
+
+   service: 任意のコンテナサービス名
+
+app (コンテナ): 上記releaseの情報を受けてアレンジ(webサーバー系のコマンド)を加える。
+
+migrate (コンテナ): 上記releaseの情報を受けてアレンジ(migrateのコマンド)を加える。
+
+command: 
+      docker runでオプションをつけていたものをここに記載する。
 
 * Docker-compose DB
 
-Line 35~38:
-   Databaseに接続するdatabase名、username, パスワード
-   setting_release.pyにアプリがデータベースに接続するように設定している。
+db: 
+  environment: 
+       環境変数を指定
+　      Databaseに接続するdatabase名、username, パスワード
+   
+   
+   *setting_release.pyにアプリがデータベースに接続するように設定している。
 
-     
+   volumes: コンテナは毎回使い捨て のためファイルを作成して、追記しても次コンテナを起ち上げた時にはファイルもなくなっている。そのためvolumeでコンテナの外のコンテナ管理領域(/var/lib/docker/volumes/todobackend/_data/static/)とコンテナ内の指定ディレクトリを紐づけして、管理領域のディレクトリに作成したファイルをコンテナ作成起動時に自動的に反映させる。
+public:/publicで互いのディレクトリを紐づけしている。
+
+Docker fileに下記を記載してコンテナにファイルの実行権限を与える。
+# Create public volume
+RUN mkdir /public
+RUN chown app:app /public
+VOLUME /public
+
+   publicはこちらで決めたvolumeの名前
+
+*acceptance bats追加
+batsのコンテナの追加     
 
