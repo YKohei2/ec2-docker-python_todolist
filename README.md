@@ -121,14 +121,3 @@ VOLUME /public
 *acceptance bats追加
 batsのコンテナの追加     
 
-*Makefile
-10行目 docker-compose build
-コンテナエラー対策のためbuildコマンドを配置
-14行目 docker-compose up --abort-on-container-exit migrate
-コンテナbuildエラー対策のため作成中にエラーが起これば、コンテナを破棄して終了するオプション。
-
-*Line 42:　die on term
-異常が起こって終了するときに緊急終了させないで、コンテナを通常終了（すべて処理を終わらせてから）させるため。
-
-Line: 43, 44
-process, thread同時処理のプロセスの設定、性能改善
